@@ -1,0 +1,45 @@
+<head>
+  <!-- Jquery mobile inclusions, as seen on http://www.w3schools.com/jquerymobile/tryit.asp?filename=tryjqmob_example -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="//code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+  <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+  <script src="//code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+</head>
+
+
+<body>
+  <div data-role="page">
+    
+    <div data-role="header">
+      <button data-theme='a'>
+          <a href={{ log_link }}>{{ log_text }}</a>
+      </button>
+    </div>
+    
+    <div data-role="content">
+      <h2> Check Me In! </h2>
+      <p>
+          <h4>Check in from your current location to store a history of where you've been and what you're doing.</h4>
+      </p>
+      Your username is {{ user }}.
+
+      <br><br>
+      View Your Check-Ins:
+      {% block content %}
+      <ul>
+          {% if checkins %}
+            {% for checkin in checkins %}
+              <li> {{ checkin }} </li>
+            {% endfor %}
+          {% else %}
+              <li> No checkins found for {{ user }} </li>
+          {% endif %}
+      </ul>
+      {% endblock %}
+      
+    </div>   
+    
+    </div> 
+
+  </div>
+</body>
