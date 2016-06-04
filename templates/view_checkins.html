@@ -33,14 +33,13 @@
           {% if checkins %}
             {% for checkin in checkins %}
               <!--Based on Google documentation: https://developers.google.com/maps/documentation/embed/guide-->
-              <!--<iframe
+              <iframe
                 width="600"
                 height="450"
                 frameborder="0"
                 style="border:0"
-                src=https://www.google.com/maps/embed/v1/view?key=AIzaSyDXGmdp-yXx6qm9uyK8wOOcFY2bJZGM3eM&center={{ checkin.latitude }},{{ checkin.longitude }}">                
-              </iframe>-->
-              {{ checkin.latitude }},{{ checkin.longitude }}
+                src="https://www.google.com/maps/embed/v1/view?key=AIzaSyDXGmdp-yXx6qm9uyK8wOOcFY2bJZGM3eM&amp;center={{checkin.latitude}},{{checkin.longitude}}&amp;zoom=16&amp;maptype=satellite">                
+              </iframe>
               <li> Description: {{ checkin.description }} </li>
               <li> Location: {{ checkin.latitude }} {{  checkin.longitude }} </li>
               <li> Date and Time: {{ checkin.timestamp }} </li> 
