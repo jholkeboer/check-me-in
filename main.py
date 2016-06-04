@@ -17,11 +17,11 @@ app.CSRF_ENABLED=True
 app.CSRF_SESSION_LKEY='unsafe'
 
 class CheckInForm(wtf.Form):
-    description = wtf.TextField('Description')
-    under30 = wtf.BooleanField('Under 30 minutes to make?')
-    category = wtf.RadioField('Category', choices=[('breakfast','Breakfast'),('lunch','Lunch'),('dinner','Dinner')])
-    ingredients = wtf.TextAreaField('Ingredients')
-    instructions = wtf.TextAreaField('Instructions')
+    owner = wtf.HiddenField('Description')
+    description = wtf.TextField('Under 30 minutes to make?')
+    latitude = wtf.HiddenField('Latitude')
+    longitude = wtf.HiddenField('Longitude')
+    timestamp = wtf.HiddenField('timestamp')
 
 
 @app.route('/')
@@ -60,20 +60,43 @@ def view():
 
     return render_template('/view_checkins.html', user=user, log_link=log_link, log_text=log_text, checkins=checkins)
 
-@app.route('/new', methods=['GET'])
+@app.route('/new', methods=['GET', 'POST'])
 def new():
+    # get user
+    user = users.get_current_user()
+    
+    if user:
+        log_link = users.create_logout_url('/')
+        log_text = 'Logout'
+    else:
+        log_link = users.create_login_url('/')
+        log_text = 'Login'
 
-    return render_template('/new_checkin.html')
+    form = CheckInForm()
+    if form.validate_on_submit():
+        checkIn =   CheckIn(owner = users.get_current_user(),
+                            latitude = float(form.latitude.data),
+                            longitude = float(form.longitude.data),
+                            description = form.description.data,
+                            timestamp = int(form.timestamp.data))
+        checkIn.put()
+        print "Check-in saved."
+        time.sleep(1)
+        return redirect('/view')
+    return render_template('/new_checkin.html', form=form, user=user, log_link=log_link, log_text=log_text)
 
-@app.route('/create', methods=['POST'])
-def create():
+# @app.route('/create', methods=['POST'])
+# def create():
 
-    return '200 OK', 200
+#     return '200 OK', 200
 
 @app.route('/delete', methods=['POST'])
 def delete():
-
-    return '200 OK', 200
+    key = request.args.get('key')
+    checkin = CheckIn.get(key)
+    checkin.delete()
+    time.sleep(1)
+    return redirect('/view')
 
 @app.errorhandler(404)
 def page_not_found(e):

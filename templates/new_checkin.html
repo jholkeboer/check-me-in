@@ -5,3 +5,98 @@
   <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
   <script src="//code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 </head>
+
+
+<body>
+  <div data-role="page">
+    
+    <div data-role="header">
+      <button data-theme='a'>
+          <a href={{ log_link }}>{{ log_text }}</a>
+      </button>
+    </div>
+    
+    <div data-role="content">
+      <h2> Check Me In! </h2>
+      <p>
+          <h4>Check in from your current location to store a history of where you've been and what you're doing.</h4>
+      </p>
+      Your username is {{ user }}.
+
+      {% block content %}
+      <h1> Add a new check-in </h1>
+      
+      <div id="location-error-msg" style="display:none">
+        <p>
+          Sorry, we could not find your location.  Either you did not give permission, or your browser does not have location support.
+        </p>
+      </div>
+      
+      <div id="location-pending-msg" style="display:none">
+        <p>
+          Getting your location...
+        </p>
+      </div>
+      
+      <form id='check-in-form' action="/new" method="post" accept-charset="utf-8" style="display:none">
+          {{ form.csrf_token }}
+          <p>
+              Description (what are you doing here?): {{ form.description }}
+          </p>
+          <p>
+              <input type="submit" value="Save">
+          </p>
+          {{ form.latitude }}
+          {{ form.longitude }}
+          {{ form.timestamp }}
+      </form>
+
+      {% if form.content %}
+      {% if form.content.errors %}
+      <ul>
+          {% for error in form.content.errors %}
+          <li> {{error}} </li>
+          {% endfor %}
+      </ul>
+      {% endif %}
+      {% endif %}
+
+      {% endblock %}
+      
+    </div>   
+    
+    </div> 
+
+  </div>
+</body>
+
+<script type="text/javascript">
+  document.getElementById('timestamp').value = Date.now();
+
+  // get location
+  // based on this tutorial: http://www.html5hacks.com/blog/2012/10/15/use-the-geolocation-api-to-display-long-slash-lat-in-a-jquery-mobile-app/
+  $(function () {
+    if (navigator.geolocation) {
+      document.getElementById("location-pending-msg").style.display = "block";
+      navigator.geolocation.getCurrentPosition(locationSuccess, locationError, {timeout: 10000});
+    } else {
+      console.log("navigator.geolocation is undefined.");
+      locationError();
+    }
+    
+    function locationSuccess(location) {
+      console.log('Location success.');
+      document.getElementById("latitude").value = parseFloat(location.coords.latitude).toFixed(4);
+      document.getElementById("longitude").value = parseFloat(location.coords.longitude).toFixed(4);
+      document.getElementById("location-pending-msg").style.display = "none";
+      document.getElementById("check-in-form").style.display = "block";
+    }
+    
+    function locationError() {
+      console.log('Location error.');
+      document.getElementById("location-error-msg").style.display = "block";
+    }
+    
+  });
+
+</script>

@@ -7,3 +7,4 @@ class CheckIn(db.Model):
     description = db.TextProperty()
     latitude = db.FloatProperty(required=True)
     longitude = db.FloatProperty(required=True)
+    timestamp = db.IntegerProperty(required=True)

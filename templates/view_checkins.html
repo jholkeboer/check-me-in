@@ -1,3 +1,6 @@
+<script>
+  window.location.reload
+</script>
 <head>
   <!-- Jquery mobile inclusions, as seen on http://www.w3schools.com/jquerymobile/tryit.asp?filename=tryjqmob_example -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,7 +32,30 @@
       <ul>
           {% if checkins %}
             {% for checkin in checkins %}
-              <li> {{ checkin }} </li>
+              <!--Based on Google documentation: https://developers.google.com/maps/documentation/embed/guide-->
+              <!--<iframe
+                width="600"
+                height="450"
+                frameborder="0"
+                style="border:0"
+                src=https://www.google.com/maps/embed/v1/view?key=AIzaSyDXGmdp-yXx6qm9uyK8wOOcFY2bJZGM3eM&center={{ checkin.latitude }},{{ checkin.longitude }}">                
+              </iframe>-->
+              {{ checkin.latitude }},{{ checkin.longitude }}
+              <li> Description: {{ checkin.description }} </li>
+              <li> Location: {{ checkin.latitude }} {{  checkin.longitude }} </li>
+              <li> Date and Time: {{ checkin.timestamp }} </li> 
+
+              <button date-theme='a'>
+                Edit
+              </button>
+
+              <form method="post" action="delete?key={{checkin.key()}}">
+                <button date-theme='a'>
+                  Delete
+                </button>                
+              </form>
+
+              <br><br>
             {% endfor %}
           {% else %}
               <li> No checkins found for {{ user }} </li>

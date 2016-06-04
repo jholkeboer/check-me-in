@@ -7,7 +7,7 @@ runtime: python27
 api_version: 1
 threadsafe: yes
 version: 1
-application: check-me-in
+application: bright-modem-133222
 
 # Handlers define how to route requests to your application.
 handlers:
