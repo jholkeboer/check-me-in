@@ -33,6 +33,7 @@ def hello():
     if user:
         log_link = users.create_logout_url('/')
         log_text = 'Logout'
+        return redirect('/view')
     else:
         log_link = users.create_login_url('/')
         log_text = 'Login'
@@ -49,11 +50,10 @@ def view():
         log_link = users.create_logout_url('/')
         log_text = 'Logout'
     else:
-        log_link = users.create_login_url('/')
-        log_text = 'Login'
+        return redirect('/')
     
     # query database
-    checkins_query = db.GqlQuery("SELECT * FROM CheckIn")
+    checkins_query = db.GqlQuery("SELECT * FROM CheckIn WHERE owner= :1", user.user_id())
     
     checkins = []
     timedisplay = {}
@@ -77,7 +77,7 @@ def new():
 
     form = CheckInForm()
     if form.validate_on_submit():
-        checkIn =   CheckIn(owner = users.get_current_user(),
+        checkIn =   CheckIn(owner = str(user.user_id()),
                             latitude = float(form.latitude.data),
                             longitude = float(form.longitude.data),
                             description = form.description.data,
@@ -110,7 +110,7 @@ def edit():
         if checkin:
             form.latitude.data = checkin.latitude
             form.longitude.data = checkin.longitude
-            form.owner.data = user
+            form.owner.data = user.user_id()
             form.description.data = checkin.description
             form.timestamp.data = checkin.timestamp
             timedisplay = datetime.datetime.fromtimestamp(checkin.timestamp / 1000).strftime('%Y-%m-%d %H:%M:%S')
@@ -118,7 +118,7 @@ def edit():
     elif form.validate_on_submit():
         checkin.latitude = float(form.latitude.data)
         checkin.longitude = float(form.longitude.data)
-        checkin.owner = user
+        checkin.owner = user.user_id()
         checkin.description = form.description.data
         checkin.timestamp = int(form.timestamp.data)
         checkin.put()
@@ -127,7 +127,7 @@ def edit():
         return redirect('/view')
     return render_template('edit_checkin.html', form=form, checkin=checkin, user=user, log_link=log_link, log_text=log_text, timedisplay=timedisplay)
 
-@app.route('/delete', methods=['POST'])
+@app.route('/delete', methods=['POST', 'DELETE'])
 def delete():
     key = request.args.get('key')
     checkin = CheckIn.get(key)

@@ -11,7 +11,7 @@
     
     <div data-role="header">
       <button data-theme='a'>
-          <a href={{ log_link }}>{{ log_text }}</a>
+          <a href={{ log_link }} rel="external">{{ log_text }}</a>
       </button>
     </div>
     
@@ -30,8 +30,8 @@
         <p>
           <!--Based on Google documentation: https://developers.google.com/maps/documentation/embed/guide-->
           <iframe
-            width="600"
-            height="450"
+            width="300"
+            height="200"
             frameborder="0"
             style="border:0"
             src="https://www.google.com/maps/embed/v1/view?key=AIzaSyDXGmdp-yXx6qm9uyK8wOOcFY2bJZGM3eM&amp;center={{checkin.latitude}},{{checkin.longitude}}&amp;zoom=16&amp;maptype=satellite">                

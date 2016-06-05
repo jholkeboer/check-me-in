@@ -12,7 +12,7 @@
     
     <div data-role="header">
       <button data-theme='a'>
-          <a href={{ log_link }}>{{ log_text }}</a>
+          <a href={{ log_link }} rel="external">{{ log_text }}</a>
       </button>
     </div>
     
@@ -144,8 +144,8 @@
           document.getElementById("longitude").value = parseFloat(location.coords.longitude).toFixed(4);
           document.getElementById("location-pending-msg").style.display = "none";
           document.getElementById("google-map").innerHTML = '<iframe ' + 
-                                                              'width="600" ' + 
-                                                              'height="400" ' +
+                                                              'width="300" ' + 
+                                                              'height="200" ' +
                                                               'frameborder="0" ' +
                                                               'style="border:0" ' +
                                                               'src="' +
