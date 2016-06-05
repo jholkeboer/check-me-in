@@ -46,6 +46,7 @@
           <p>
               <input type="submit" value="Save">
           </p>
+          <div id="google-map"></div>
           {{ form.latitude }}
           {{ form.longitude }}
           {{ form.timestamp }}
@@ -89,6 +90,17 @@
       document.getElementById("latitude").value = parseFloat(location.coords.latitude).toFixed(4);
       document.getElementById("longitude").value = parseFloat(location.coords.longitude).toFixed(4);
       document.getElementById("location-pending-msg").style.display = "none";
+      document.getElementById("google-map").innerHTML = '<iframe ' + 
+                                                          'width="600" ' + 
+                                                          'height="400" ' +
+                                                          'frameborder="0" ' +
+                                                          'style="border:0" ' +
+                                                          'src="' +
+                                                          'https://www.google.com/maps/embed/v1/view?key=AIzaSyDXGmdp-yXx6qm9uyK8wOOcFY2bJZGM3eM&amp;center=' +
+                                                          parseFloat(location.coords.latitude).toFixed(4).toString() + ',' +
+                                                          parseFloat(location.coords.longitude).toFixed(4).toString() +
+                                                          '&amp;zoom=16&amp;maptype=satellite">' +
+                                                          '</iframe>'
       document.getElementById("check-in-form").style.display = "block";
     }
     

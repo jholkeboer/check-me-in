@@ -5,3 +5,58 @@
   <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
   <script src="//code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 </head>
+
+<body>
+  <div data-role="page">
+    
+    <div data-role="header">
+      <button data-theme='a'>
+          <a href={{ log_link }}>{{ log_text }}</a>
+      </button>
+    </div>
+    
+    <div data-role="content">
+      <h2> Check Me In! </h2>
+      <p>
+          <h4>Check in from your current location to store a history of where you've been and what you're doing.</h4>
+      </p>
+      Your username is {{ user }}.
+      
+      <form action="/edit?key={{ form.key }}" method="post">
+        {{ form.csrf_token }}
+        {{ form.latitude }}
+        {{ form.longitude }}
+        {{ form.timestamp }}
+        <p>
+          <!--Based on Google documentation: https://developers.google.com/maps/documentation/embed/guide-->
+          <iframe
+            width="600"
+            height="450"
+            frameborder="0"
+            style="border:0"
+            src="https://www.google.com/maps/embed/v1/view?key=AIzaSyDXGmdp-yXx6qm9uyK8wOOcFY2bJZGM3eM&amp;center={{checkin.latitude}},{{checkin.longitude}}&amp;zoom=16&amp;maptype=satellite">                
+          </iframe>
+        </p>
+        <p>
+          Current description: {{ checkin.description }}
+        <p>
+        <p>
+          Last modified: {{ checkin.timestamp }}
+        </p>
+        <p>
+          Change the description: {{ form.description }}
+        </p>
+        <p>
+          <input type="submit" value="Save">
+        </p>
+      </form>
+      
+    </div>
+    
+
+  </div>
+</body>
+
+<script type="text/javascript">
+  document.getElementById('timestamp').value = Date.now();
+</script>

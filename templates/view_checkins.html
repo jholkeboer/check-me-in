@@ -26,6 +26,12 @@
       </p>
       Your username is {{ user }}.
 
+      <form method="get" action="/new">
+        <button data-theme 'a'>
+          Add a new check-in
+        </button>
+      </form>
+
       <br><br>
       View Your Check-Ins:
       {% block content %}
@@ -44,9 +50,11 @@
               <li> Location: {{ checkin.latitude }} {{  checkin.longitude }} </li>
               <li> Date and Time: {{ checkin.timestamp }} </li> 
 
-              <button date-theme='a'>
-                Edit
-              </button>
+              <form method="get" action="edit?key={{checkin.key()}}">
+                <button data-theme 'a'>
+                  Edit
+                </button>
+              </form>
 
               <form method="post" action="delete?key={{checkin.key()}}">
                 <button date-theme='a'>

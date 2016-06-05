@@ -37,7 +37,7 @@ def hello():
         log_text = 'Login'
     
     
-    return render_template('/landing.html', user=user, log_link=log_link, log_text=log_text)
+    return render_template('/view_checkins.html', user=user, log_link=log_link, log_text=log_text)
 
 @app.route('/view', methods=['GET'])
 def view():
@@ -85,10 +85,42 @@ def new():
         return redirect('/view')
     return render_template('/new_checkin.html', form=form, user=user, log_link=log_link, log_text=log_text)
 
-# @app.route('/create', methods=['POST'])
-# def create():
+@app.route('/edit', methods=['GET', 'POST'])
+def edit():
+    # get user
+    user = users.get_current_user()
+    
+    if user:
+        log_link = users.create_logout_url('/')
+        log_text = 'Logout'
+    else:
+        log_link = users.create_login_url('/')
+        log_text = 'Login'
 
-#     return '200 OK', 200
+    key = request.args.get('key')
+    checkin = CheckIn.get(key)
+    form = CheckInForm()
+    if not key:
+        return redirect('/view')
+    if request.method == 'GET':
+        if checkin:
+            form.latitude.data = checkin.latitude
+            form.longitude.data = checkin.longitude
+            form.owner.data = user
+            form.description.data = checkin.description
+            form.timestamp.data = checkin.timestamp
+            form.key = checkin.key()
+    elif form.validate_on_submit():
+        checkin.latitude = float(form.latitude.data)
+        checkin.longitude = float(form.longitude.data)
+        checkin.owner = user
+        checkin.description = form.description.data
+        checkin.timestamp = int(form.timestamp.data)
+        checkin.put()
+        print "checkin edited."
+        time.sleep(1)
+        return redirect('/view')
+    return render_template('edit_checkin.html', form=form, checkin=checkin, user=user, log_link=log_link, log_text=log_text)
 
 @app.route('/delete', methods=['POST'])
 def delete():
