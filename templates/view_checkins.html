@@ -11,7 +11,7 @@
 
 
 <body>
-  <div data-role="page">
+  <div data-role="page" data-url="{{ url_for('view') }}" data-ajax="false">
     
     <div data-role="header">
       <button data-theme='a'>
@@ -26,11 +26,11 @@
       </p>
       Your username is {{ user }}.
 
-      <form method="get" action="/new">
+      <a href="/new">
         <button data-theme 'a'>
           Add a new check-in
         </button>
-      </form>
+      </a>
 
       <br><br>
       View Your Check-Ins:
@@ -48,7 +48,7 @@
               </iframe>
               <li> Description: {{ checkin.description }} </li>
               <li> Location: {{ checkin.latitude }} {{  checkin.longitude }} </li>
-              <li> Date and Time: {{ checkin.timestamp }} </li> 
+              <li> Date and Time: {{ datetime.datetime.fromtimestamp(checkin.timestamp / 1000).strftime('%Y-%m-%d %H:%M:%S') }} </li> 
 
               <form method="get" action="edit?key={{checkin.key()}}">
                 <button data-theme 'a'>

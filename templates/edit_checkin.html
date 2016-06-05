@@ -7,7 +7,7 @@
 </head>
 
 <body>
-  <div data-role="page">
+  <div data-role="page" data-url="{{ url_for('edit') }}" data-ajax="false">
     
     <div data-role="header">
       <button data-theme='a'>
@@ -41,7 +41,7 @@
           Current description: {{ checkin.description }}
         <p>
         <p>
-          Last modified: {{ checkin.timestamp }}
+          Last modified: {{ timedisplay }}
         </p>
         <p>
           Change the description: {{ form.description }}
@@ -58,5 +58,7 @@
 </body>
 
 <script type="text/javascript">
-  document.getElementById('timestamp').value = Date.now();
+  $(document).ready(function () {
+    document.getElementById('timestamp').value = Date.now();
+  });
 </script>

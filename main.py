@@ -9,6 +9,7 @@ from flaskext import wtf
 from flaskext.wtf import validators
 from google.appengine.api import users
 from models import CheckIn
+import datetime
 
 app = Flask(__name__)
 app.secret_key='unsafe'
@@ -55,10 +56,12 @@ def view():
     checkins_query = db.GqlQuery("SELECT * FROM CheckIn")
     
     checkins = []
+    timedisplay = {}
     for c in checkins_query:
         checkins.append(c)
+        timedisplay[c.key()] = datetime.datetime.fromtimestamp(c.timestamp / 1000).strftime('%Y-%m-%d %H:%M:%S')
 
-    return render_template('/view_checkins.html', user=user, log_link=log_link, log_text=log_text, checkins=checkins)
+    return render_template('/view_checkins.html', user=user, log_link=log_link, log_text=log_text, checkins=checkins, timedisplay=timedisplay, datetime=datetime)
 
 @app.route('/new', methods=['GET', 'POST'])
 def new():
@@ -100,6 +103,7 @@ def edit():
     key = request.args.get('key')
     checkin = CheckIn.get(key)
     form = CheckInForm()
+    timedisplay = ''
     if not key:
         return redirect('/view')
     if request.method == 'GET':
@@ -109,6 +113,7 @@ def edit():
             form.owner.data = user
             form.description.data = checkin.description
             form.timestamp.data = checkin.timestamp
+            timedisplay = datetime.datetime.fromtimestamp(checkin.timestamp / 1000).strftime('%Y-%m-%d %H:%M:%S')
             form.key = checkin.key()
     elif form.validate_on_submit():
         checkin.latitude = float(form.latitude.data)
@@ -120,7 +125,7 @@ def edit():
         print "checkin edited."
         time.sleep(1)
         return redirect('/view')
-    return render_template('edit_checkin.html', form=form, checkin=checkin, user=user, log_link=log_link, log_text=log_text)
+    return render_template('edit_checkin.html', form=form, checkin=checkin, user=user, log_link=log_link, log_text=log_text, timedisplay=timedisplay)
 
 @app.route('/delete', methods=['POST'])
 def delete():
